@@ -1,4 +1,4 @@
-const handleAddToCard = () => {
+const handleAddToCart = () => {
     const productName = document.getElementById('proName');
     const productQuantity = document.getElementById('proQuantity');
 

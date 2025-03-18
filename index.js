@@ -47,22 +47,58 @@
 
 // card add product
 
-const addCard = () => {
+const addCart = () => {
     const productName = document.getElementById('productName');
     const productQuantity = document.getElementById('productQuantity');
 
-    const name = productName.value;
-    const quantity = productQuantity.value;
+    const name = productName.value.trim();
+    const quantity = productQuantity.value.trim();
+
+    if (!name || !quantity) {
+        alert("Please enter both product name and quantity.");
+        return;
+    }
+
+    saveLocalStorage(name, quantity);
     displayData(name, quantity);
-    
+
     productName.value = '';
     productQuantity.value = '';
-}
+};
 
-const displayData = (name,quantity) => {
-    const container = document.getElementById('addCard');
+const getProductsFromLocalStorage = () => {
+    let cart = {};
+    const data = localStorage.getItem('cart');
+    if (data) {
+        cart = JSON.parse(data);
+    }
+    return cart;
+};
+
+const saveLocalStorage = (product, quantity) => {
+    const cart = getProductsFromLocalStorage();
+
+    // Update or add new product
+    cart[product] = quantity;
+
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+};
+
+const displayData = (name, quantity) => {
+    const container = document.getElementById('addCart');
     const li = document.createElement('li');
-    li.innerText = `${name} : ${quantity}`
+    li.innerText = `${name} : ${quantity}`;
+    container.append(li);
+};
 
-    container.appendChild(li);
-}
+// Load products from localStorage on page load
+const loadCart = () => {
+    const cart = getProductsFromLocalStorage();
+    for (const product in cart) {
+        displayData(product, cart[product]);
+    }
+};
+
+// Run loadCart when the page loads
+window.onload = loadCart;
